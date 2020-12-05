@@ -24,3 +24,9 @@ with open(voicemeeter_config_file) as f:
     xml_info = eval(xml_info)
     config_file.xml_info = xml_info
 
+    # get MacroButtonConfiguration
+    MacroButtonConfiguration = re.search(r"<MacroButtonConfiguration (.*?) />", raw_data).group(1).replace(" ", ", ")
+    MacroButtonConfiguration = f"dict({MacroButtonConfiguration})"
+    MacroButtonConfiguration = eval(MacroButtonConfiguration)
+    config_file.MacroButtonConfiguration = MacroButtonConfiguration
+
