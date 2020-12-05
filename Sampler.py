@@ -68,7 +68,7 @@ with open(voicemeeter_config_file) as f:
         mb_init_request = re.search(r"<MB_InitRequest>(.*?)</", mb, re.DOTALL|re.MULTILINE).group(1)
         
         # get mb_on_request
-        mb_off_request = re.search(r"<MB_OnRequest>(.*?)</", mb, re.DOTALL|re.MULTILINE).group(1)
+        mb_on_request = re.search(r"<MB_OnRequest>(.*?)</", mb, re.DOTALL|re.MULTILINE).group(1)
         
         # get mb_off_request
         mb_off_request = re.search(r"<MB_OffRequest>(.*?)</", mb, re.DOTALL|re.MULTILINE).group(1)
