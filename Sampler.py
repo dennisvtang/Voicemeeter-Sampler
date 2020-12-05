@@ -13,7 +13,7 @@ latest_file = max(soundbytes, key=os.path.getctime)
 print('latest file: ', latest_file)
 
 config_file = VoicemeeterMacroMap()
-config_file.macro_buttons = [[] for i in range(8)]
+config_file.macro_buttons = []
 # load MacroButtonConfig file
 voicemeeter_config_file = f"{voicemeeter_folder_path}\\MacroButtonConfig.xml"
 with open(voicemeeter_config_file) as f:
@@ -34,10 +34,8 @@ with open(voicemeeter_config_file) as f:
     # get MacroButtons
     all_macro_buttons = re.findall(r"<MacroButton (.*?)</MacroButton>", raw_data, re.DOTALL|re.MULTILINE)
     # process each MacroButton
+    row_of_buttons = []
     for counter, mb in enumerate(all_macro_buttons):
-        print(mb)
-        print()
-        print()
         # get macro_button_info
         macro_button_info = mb[:mb.find(">")].replace(" ", ", ")
         macro_button_info = f"dict({macro_button_info})"
@@ -75,3 +73,12 @@ with open(voicemeeter_config_file) as f:
 
         # encapsulate MacroButton
         button = Macrobutton(macro_button_info, mb_midi, mb_trigger, mb_xinput, mb_name, mb_subname, mb_init_request, mb_on_request, mb_off_request)
+        
+        # convert button index into 2D array indexing
+        raw_index = button.macro_button_info['index']
+        if len(row_of_buttons) <= 9:
+            row_of_buttons.append(button)
+        else:
+            config_file.macro_buttons.append(row_of_buttons)
+            row_of_buttons = []
+
