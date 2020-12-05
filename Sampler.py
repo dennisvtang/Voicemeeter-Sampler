@@ -13,6 +13,7 @@ latest_file = max(soundbytes, key=os.path.getctime)
 print('latest file: ', latest_file)
 
 config_file = VoicemeeterMacroMap()
+config_file.macro_buttons = [[] for i in range(8)]
 # load MacroButtonConfig file
 voicemeeter_config_file = f"{voicemeeter_folder_path}\\MacroButtonConfig.xml"
 with open(voicemeeter_config_file) as f:
