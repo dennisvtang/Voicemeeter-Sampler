@@ -31,3 +31,47 @@ with open(voicemeeter_config_file) as f:
     MacroButtonConfiguration = eval(MacroButtonConfiguration)
     config_file.MacroButtonConfiguration = MacroButtonConfiguration
 
+    # get MacroButtons
+    all_macro_buttons = re.findall(r"<MacroButton (.*?)</MacroButton>", raw_data, re.DOTALL|re.MULTILINE)
+    # process each MacroButton
+    for counter, mb in enumerate(all_macro_buttons):
+        print(mb)
+        print()
+        print()
+        # get macro_button_info
+        macro_button_info = mb[:mb.find(">")].replace(" ", ", ")
+        macro_button_info = f"dict({macro_button_info})"
+        macro_button_info = eval(macro_button_info)
+
+        # get mb_midi
+        mb_midi = re.search(r"<MB_MIDI (.*?) />", mb).group(1).replace(" ", ", ")
+        mb_midi = f"dict({mb_midi})"
+        mb_midi = eval(mb_midi)
+
+        # get mb_trigger
+        mb_trigger = re.search(r"<MB_TRIGGER (.*?) />", mb).group(1).replace(" ", ", ")
+        mb_trigger = f"dict({mb_trigger})"
+        mb_trigger = eval(mb_trigger)
+        
+        # get mb_xinput
+        mb_xinput = re.search(r"<MB_XINPUT (.*?) />", mb).group(1).replace(" ", ", ")
+        mb_xinput = f"dict({mb_xinput})"
+        mb_xinput = eval(mb_xinput)
+        
+        # get mb_name
+        mb_name = re.search(r"<MB_Name>(.*?)</MB_Name>", mb).group(1)
+
+        # get mb_subname
+        mb_subname = re.search(r"<MB_Subname>(.*?)</", mb).group(1)
+        
+        # get mb_init_request
+        mb_init_request = re.search(r"<MB_InitRequest>(.*?)</", mb, re.DOTALL|re.MULTILINE).group(1)
+        
+        # get mb_on_request
+        mb_off_request = re.search(r"<MB_OnRequest>(.*?)</", mb, re.DOTALL|re.MULTILINE).group(1)
+        
+        # get mb_off_request
+        mb_off_request = re.search(r"<MB_OffRequest>(.*?)</", mb, re.DOTALL|re.MULTILINE).group(1)
+
+        # encapsulate MacroButton
+        button = Macrobutton(macro_button_info, mb_midi, mb_trigger, mb_xinput, mb_name, mb_subname, mb_init_request, mb_on_request, mb_off_request)
