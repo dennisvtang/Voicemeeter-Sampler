@@ -95,7 +95,6 @@ if __name__ == "__main__":
 
     # get last recorded soundbyte
     latest_file = max(soundbytes, key=os.path.getctime)
-    print('latest file: ', latest_file)
 
     # load MacroButtonConfig file
     config_path = f"{voicemeeter_folder_path}\\MacroButtonConfig.xml"
