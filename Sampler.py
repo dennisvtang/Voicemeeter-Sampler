@@ -7,7 +7,7 @@ def load_voicemeeter_macro_config(config_path:str):
     '''Loads voicemeeter macro button config at given path and returns it as a VoicemeeterMacroMap object'''
     
     # create VoicemeeterMacroMap object to store all data
-    config_file = VoicemeeterMacroMap()
+    config_file = VoicemeeterMacroMap(config_path)
     config_file.macro_buttons = []
 
     # load raw string from xml file

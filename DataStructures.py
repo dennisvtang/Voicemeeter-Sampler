@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class VoicemeeterMacroMap():
+    config_path:str
     xml_info:dict = None
     macro_button_config:dict = None
     macro_buttons:list = None
