@@ -101,3 +101,4 @@ if __name__ == "__main__":
     config_file = load_voicemeeter_macro_config(config_path)
 
     config_file.update_soundbyte(row, col, latest_file)
+    config_file.save_file()
