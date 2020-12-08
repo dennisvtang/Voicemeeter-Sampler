@@ -1,4 +1,4 @@
-import os
+import os, sys
 from DataStructures import VoicemeeterMacroMap, Macrobutton
 import re
 
@@ -83,6 +83,10 @@ def load_voicemeeter_macro_config(config_path:str):
 
 
 if __name__ == "__main__":
+    # get button indexes from command line arguments
+    row = int(sys.argv[1])
+    col = int(sys.argv[2])
+
     # get path to default voicemeeter folder (where soundbytes are saved and where MacroButtonsConfig is saved)
     voicemeeter_folder_path = os.path.expanduser("~\Documents\\Voicemeeter")
 
@@ -97,4 +101,4 @@ if __name__ == "__main__":
     config_path = f"{voicemeeter_folder_path}\\MacroButtonConfig.xml"
     config_file = load_voicemeeter_macro_config(config_path)
 
-    print(config_file.macro_buttons[0][5].mb_name)
+    config_file.update_soundbyte(row, col, latest_file)
