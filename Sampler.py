@@ -75,7 +75,9 @@ def load_voicemeeter_macro_config(config_path:str):
         else:
             config_file.macro_buttons.append(row_of_buttons)
             row_of_buttons = []
-    
+            row_of_buttons.append(button)
+
+    config_file.macro_buttons.append(row_of_buttons)
     return config_file
 
 
