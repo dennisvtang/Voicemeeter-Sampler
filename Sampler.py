@@ -120,10 +120,14 @@ if __name__ == "__main__":
         in_use = set(get_all_loaded_soundbytes(config_file))
 
         # retrieve list of soundbytes not in use
-        not_in_use = soundbytes - in_use
+        not_in_use = sorted(list(soundbytes - in_use))
 
-        # remove oldest soundbyte
-        os.remove(sorted(list(not_in_use))[0])
+        # delete soundbytes until theres only 18 in the folder
+        num_to_delete = len(soundbytes) - 18
+        for _ in range(num_to_delete):
+            # remove oldest soundbyte
+            os.remove(not_in_use.pop(0))
+
 
     config_file.update_soundbyte(row, col, latest_file)
     config_file.save_file()
