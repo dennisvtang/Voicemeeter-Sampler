@@ -105,7 +105,7 @@ if __name__ == "__main__":
     voicemeeter_folder_path = os.path.expanduser("~\Documents\\Voicemeeter")
 
     # get all soundbytes in voicemeeter folder
-    soundbytes = [f"{voicemeeter_folder_path}\\{file}" for file in os.listdir(voicemeeter_folder_path) if ".wav" in file]
+    soundbytes = set([f"{voicemeeter_folder_path}\\{file}" for file in os.listdir(voicemeeter_folder_path) if ".wav" in file])
 
     # get last recorded soundbyte
     latest_file = max(soundbytes, key=os.path.getctime)
@@ -113,6 +113,17 @@ if __name__ == "__main__":
     # load MacroButtonConfig file
     config_path = f"{voicemeeter_folder_path}\\MacroButtonConfig.xml"
     config_file = load_voicemeeter_macro_config(config_path)
+
+    # remove oldest soundbyte after 8 currently loaded and a buffer for 10
+    if len(soundbytes) >= 19:
+        # retrieve list of soundbytes in use
+        in_use = set(get_all_loaded_soundbytes(config_file))
+
+        # retrieve list of soundbytes not in use
+        not_in_use = soundbytes - in_use
+
+        # remove oldest soundbyte
+        os.remove(sorted(list(not_in_use))[0])
 
     config_file.update_soundbyte(row, col, latest_file)
     config_file.save_file()
