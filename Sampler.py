@@ -1,6 +1,7 @@
 import os, sys
 from DataStructures import VoicemeeterMacroMap, Macrobutton
 import re
+import typing
 
 
 def load_voicemeeter_macro_config(config_path:str):
@@ -81,6 +82,19 @@ def load_voicemeeter_macro_config(config_path:str):
     return config_file
 
 
+def get_all_loaded_soundbytes(config_file) -> typing.List[str]:
+    '''Returns a list of all soundbytes that are currently loaded by sampler'''
+    in_use = []
+
+    # loop through all buttons
+    for row in config_file.macro_buttons:
+        for button in row:
+            # button is a sampler play soundbyte button
+            if "Recorder.Load" in button.mb_on_request:
+                in_use.append(re.search(r" \"(.*?)\"", button.mb_on_request).group(1))
+
+    return in_use
+
 
 if __name__ == "__main__":
     # get button indexes from command line arguments
@@ -91,7 +105,7 @@ if __name__ == "__main__":
     voicemeeter_folder_path = os.path.expanduser("~\Documents\\Voicemeeter")
 
     # get all soundbytes in voicemeeter folder
-    soundbytes = [f"{voicemeeter_folder_path}\\{file}" for file in os.listdir(voicemeeter_folder_path) if ".wav" in file]
+    soundbytes = set([f"{voicemeeter_folder_path}\\{file}" for file in os.listdir(voicemeeter_folder_path) if ".wav" in file])
 
     # get last recorded soundbyte
     latest_file = max(soundbytes, key=os.path.getctime)
@@ -99,6 +113,21 @@ if __name__ == "__main__":
     # load MacroButtonConfig file
     config_path = f"{voicemeeter_folder_path}\\MacroButtonConfig.xml"
     config_file = load_voicemeeter_macro_config(config_path)
+
+    # remove oldest soundbyte after 8 currently loaded and a buffer for 10
+    if len(soundbytes) >= 19:
+        # retrieve list of soundbytes in use
+        in_use = set(get_all_loaded_soundbytes(config_file))
+
+        # retrieve list of soundbytes not in use
+        not_in_use = sorted(list(soundbytes - in_use))
+
+        # delete soundbytes until theres only 18 in the folder
+        num_to_delete = len(soundbytes) - 18
+        for _ in range(num_to_delete):
+            # remove oldest soundbyte
+            os.remove(not_in_use.pop(0))
+
 
     config_file.update_soundbyte(row, col, latest_file)
     config_file.save_file()
