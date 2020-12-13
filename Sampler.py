@@ -1,6 +1,7 @@
 import os, sys
 from DataStructures import VoicemeeterMacroMap, Macrobutton
 import re
+import typing
 
 
 def load_voicemeeter_macro_config(config_path:str):
@@ -80,6 +81,19 @@ def load_voicemeeter_macro_config(config_path:str):
     config_file.macro_buttons.append(row_of_buttons)
     return config_file
 
+
+def get_all_loaded_soundbytes(config_file) -> typing.List[str]:
+    '''Returns a list of all soundbytes that are currently loaded by sampler'''
+    in_use = []
+
+    # loop through all buttons
+    for row in config_file.macro_buttons:
+        for button in row:
+            # button is a sampler play soundbyte button
+            if "Recorder.Load" in button.mb_on_request:
+                in_use.append(re.search(r" \"(.*?)\"", button.mb_on_request).group(1))
+
+    return in_use
 
 
 if __name__ == "__main__":
