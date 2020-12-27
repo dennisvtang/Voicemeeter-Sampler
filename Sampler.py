@@ -22,7 +22,11 @@ def load_voicemeeter_macro_config(config_path:str):
     config_file.xml_info = xml_info
 
     # parse MacroButtonConfiguration
-    macro_button_config = re.search(r"<MacroButtonConfiguration (.*?) />", raw_data).group(1).replace(" ", ", ")
+    # add try block because sometimes the / at the end disappears
+    try:
+        macro_button_config = re.search(r"<MacroButtonConfiguration (.*?) />", raw_data).group(1).replace(" ", ", ")
+    except:
+        macro_button_config = re.search(r"<MacroButtonConfiguration (.*?) >", raw_data).group(1).replace(" ", ", ")
     macro_button_config = f"dict({macro_button_config})"
     macro_button_config = eval(macro_button_config)
     config_file.macro_button_config = macro_button_config
@@ -102,7 +106,10 @@ if __name__ == "__main__":
     col = int(sys.argv[2])
 
     # get path to default voicemeeter folder (where soundbytes are saved and where MacroButtonsConfig is saved)
-    voicemeeter_folder_path = os.path.expanduser("~\Documents\\Voicemeeter")
+    voicemeeter_folder_path = os.path.expanduser("~\OneDrive\Documents\\Voicemeeter")
+    # add check for if documents are saved in OneDrive folder
+    if os.path.exists(voicemeeter_folder_path) == False:
+        voicemeeter_folder_path = os.path.expanduser("~\Documents\\Voicemeeter")
 
     # get all soundbytes in voicemeeter folder
     soundbytes = set([f"{voicemeeter_folder_path}\\{file}" for file in os.listdir(voicemeeter_folder_path) if ".wav" in file])
