@@ -22,7 +22,10 @@ def load_voicemeeter_macro_config(config_path:str):
     config_file.xml_info = xml_info
 
     # parse MacroButtonConfiguration
-    macro_button_config = re.search(r"<MacroButtonConfiguration (.*?) />", raw_data).group(1).replace(" ", ", ")
+    try:
+        macro_button_config = re.search(r"<MacroButtonConfiguration (.*?) />", raw_data).group(1).replace(" ", ", ")
+    except:
+        macro_button_config = re.search(r"<MacroButtonConfiguration (.*?) >", raw_data).group(1).replace(" ", ", ")
     macro_button_config = f"dict({macro_button_config})"
     macro_button_config = eval(macro_button_config)
     config_file.macro_button_config = macro_button_config
