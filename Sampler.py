@@ -22,6 +22,7 @@ def load_voicemeeter_macro_config(config_path:str):
     config_file.xml_info = xml_info
 
     # parse MacroButtonConfiguration
+    # add try block because sometimes the / at the end disappears
     try:
         macro_button_config = re.search(r"<MacroButtonConfiguration (.*?) />", raw_data).group(1).replace(" ", ", ")
     except:
