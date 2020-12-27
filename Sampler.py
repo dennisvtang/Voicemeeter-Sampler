@@ -101,6 +101,9 @@ def get_all_loaded_soundbytes(config_file) -> typing.List[str]:
 
 
 if __name__ == "__main__":
+    # equal to the number of playback buttons you will be using + how many files to keep before deleteing the oldest soundbyte
+    buffer_size = CHANGEME
+
     # get button indexes from command line arguments
     row = int(sys.argv[1])
     col = int(sys.argv[2])
@@ -121,8 +124,8 @@ if __name__ == "__main__":
     config_path = f"{voicemeeter_folder_path}\\MacroButtonConfig.xml"
     config_file = load_voicemeeter_macro_config(config_path)
 
-    # remove oldest soundbyte after 8 currently loaded and a buffer for 10
-    if len(soundbytes) >= 19:
+    # remove oldest soundbyte after after buffer is full
+    if len(soundbytes) > buffer_size:
         # retrieve list of soundbytes in use
         in_use = set(get_all_loaded_soundbytes(config_file))
 
