@@ -132,8 +132,8 @@ if __name__ == "__main__":
         # retrieve list of soundbytes not in use
         not_in_use = sorted(list(soundbytes - in_use))
 
-        # delete soundbytes until theres only 18 in the folder
-        num_to_delete = len(soundbytes) - 18
+        # delete soundbytes until number of soundbytes == buffer_size
+        num_to_delete = len(soundbytes) - buffer_size
         for _ in range(num_to_delete):
             # remove oldest soundbyte
             os.remove(not_in_use.pop(0))
